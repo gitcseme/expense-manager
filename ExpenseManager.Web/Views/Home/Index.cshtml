@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home - Expense Manager";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/themify-icons.css">
+    <link href="~/css/Application.css" rel="stylesheet" />
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Cellect Web</title>
+    <link rel="stylesheet" href="~/Styles/Application.css" />
+</head>
+<body>
+    <script>
+        var SITE_API_ROOT = "@ViewData["BaseUrl"]";
+    </script>
+    <div id="app"></div>
+</body>
+</html>
+
+@section Scripts {
+    <script src="~/js/main.js"></script>
+}
