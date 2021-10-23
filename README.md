@@ -1,4 +1,4 @@
-# expense-manager
+# Expense Manager
 An expense manager web application build for managing expenses for a company or organization
 
 <details><summary><b>Instructions to install</b></summary>
@@ -26,3 +26,27 @@ An expense manager web application build for managing expenses for a company or 
 	$ dotnet run
 	```
 </details>
+
+## Screen shoots
+
+1. Dashboard:
+	<p align="center">
+	  <img src="./screenshoots/Home.png" alt="Dashboard" width="738">
+	</p>
+
+2. Categories:
+	<p align="center">
+	  <img src="./screenshoots/Categories.png" alt="Dashboard" width="738">
+	</p>
+3. Expenses:
+	<p align="center">
+	  <img src="./screenshoots/Expenses.png" alt="Dashboard" width="738">
+	</p>
+4. Balances:
+	<p align="center">
+	  <img src="./screenshoots/Balance.png" alt="Dashboard" width="738">
+	</p>
+5. Reports:
+	<p align="center">
+	  <img src="./screenshoots/Report.png" alt="Dashboard" width="738">
+	</p>
