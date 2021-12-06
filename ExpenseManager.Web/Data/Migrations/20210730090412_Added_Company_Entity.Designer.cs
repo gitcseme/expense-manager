@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ExpenseManager.Web.Data.Migrations
+namespace ExpenseManager.Models.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20210730090412_Added_Company_Entity")]

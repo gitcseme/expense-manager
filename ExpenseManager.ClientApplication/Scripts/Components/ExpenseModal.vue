@@ -35,18 +35,33 @@
             </div>
             <div class="form-group">
               <label>Amount</label>
-              <input v-validate="'required'" data-vv-name='amount' data-vv-as='amount' type="number" class="form-control" v-model="vmExpense.amount">
+              <input 
+                v-validate="'required|numeric'" 
+                data-vv-name='amount' 
+                data-vv-as='amount' 
+                placeholder="0.0"
+                type="text" 
+                class="form-control" 
+                v-model="vmExpense.amount"
+              >
               <span class="text-danger">{{ errors.first('amount') }}</span>
             </div>
             <div class="form-group">
-              <label>Payment Mode</label>
+              <label>Pay through</label>
               <select v-model="vmExpense.paymentMode" class="form-control">
-                <option v-for="payMode in paymentModes" :key="payMode" :value="payMode">{{ payMode }}</option>
+                <option v-for="payMode in paymentOptions" :key="payMode" :value="payMode">{{ payMode }}</option>
               </select>
             </div>
             <div class="form-group">
               <label>Payment Reference</label>
-              <input type="text" v-validate="'required'" data-vv-name='Payment Reference' class="form-control" v-model="vmExpense.paymentReference">
+              <input 
+                :disabled="vmExpense.paymentMode == paymentOptions[0]" 
+                type="text" 
+                v-validate="'required'" 
+                data-vv-name='Payment Reference' 
+                class="form-control" 
+                v-model="vmExpense.paymentReference"
+              >
               <span class="text-danger">{{ errors.first('Payment Reference') }}</span>
             </div>
             <div class="form-group">
@@ -75,6 +90,7 @@ import Treeselect from '@riophae/vue-treeselect';
 import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import MetadataService from '@scripts/Services/MetadataService';
 
 export default {
   components: {
@@ -87,14 +103,14 @@ export default {
     return {
       vmExpense: this.expense,
       vmMode: this.mode,
-      paymentModes: ['Hand Cash', 'Bikash', 'Rocket', 'DBBL', 'Nogod', 'Upai']
+      paymentOptions: MetadataService.getPaymentOptions(),
     };
   },
   mounted() {
     if (!!this.options && this.options[0].id == 0) {
       this.options.splice(0, 1);
     }
-    this.vmExpense.paymentMode = this.vmExpense.paymentMode == '' ? this.paymentModes[0] : this.vmExpense.paymentMode;
+    this.vmExpense.paymentMode = this.vmExpense.paymentMode == '' ? this.paymentOptions[0] : this.vmExpense.paymentMode;
   },
   methods: {
     saveExpense() {

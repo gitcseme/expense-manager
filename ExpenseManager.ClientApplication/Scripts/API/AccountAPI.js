@@ -21,19 +21,19 @@ export default {
           LocalStorageService.setAuthenticationToken(response.data.apiToken);
           resolve();
         })
-        .catch(error => reject(error));
+        .catch(error => reject(error.response.data));
     });
   },
   login(loginModel) {
     return new Promise((resolve, reject) => {
       Axios.post(ACCOUNT_API_ROOT + "/login", loginModel)
-        .then(response => {
+        .then((response) => {
           console.log("login-response: ", response.data);
           LocalStorageService.setAuthenticationToken(response.data.apiToken);
-          resolve();
+          resolve(response);
         })
-        .catch(error => reject(error));
-    });
+        .catch(error => reject(error.response.data));
+    }); 
   },
   logout() {
     return new Promise((resolve, reject) => {
@@ -48,6 +48,13 @@ export default {
   emailExists(email) {
     return new Promise((resolve, reject) => {
       Axios.post(ACCOUNT_API_ROOT + `/emailExists?email=${email}`)
+        .then(response => resolve(response.data))
+        .catch(error => reject(error));
+    });
+  },
+  sendInvitation(email) {
+    return new Promise((resolve, reject) => {
+      Axios.post(ACCOUNT_API_ROOT + `/send-invitation?email=${email}`)
         .then(response => resolve(response.data))
         .catch(error => reject(error));
     });

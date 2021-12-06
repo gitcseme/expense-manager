@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ExpenseManager.Web.Authentication.Models
+namespace ExpenseManager.Models.Authentication.Models
 {
     public class RegisterModel
     {

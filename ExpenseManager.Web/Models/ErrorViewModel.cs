@@ -1,6 +1,6 @@
 using System;
 
-namespace ExpenseManager.Web.Models
+namespace ExpenseManager.Models.Models
 {
     public class ErrorViewModel
     {

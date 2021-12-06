@@ -1,10 +1,7 @@
-using ExpenseManager.Web.Authentication;
-using ExpenseManager.Web.Authentication.Models;
-using ExpenseManager.Web.Authentication.Responses;
+using ExpenseManager.Models.Authentication.Models;
 using ExpenseManager.Models.Entities;
 using ExpenseManager.Models.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpenseManager.Web.Controllers
+namespace ExpenseManager.Models.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -27,34 +24,51 @@ namespace ExpenseManager.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ICompanyService _companyService;
+        private readonly IAccountService _accountService;
 
-		public AccountController(UserManager<ApplicationUser> userManager, IConfiguration configuration, ICompanyService companyService, SignInManager<ApplicationUser> signInManager)
-		{
-			_userManager = userManager;
-			_configuration = configuration;
-			_companyService = companyService;
-			_signInManager = signInManager;
-		}
+        public AccountController(UserManager<ApplicationUser> userManager, 
+            IConfiguration configuration, 
+            ICompanyService companyService, 
+            SignInManager<ApplicationUser> signInManager, 
+            IAccountService accountService)
+        {
+            _userManager = userManager;
+            _configuration = configuration;
+            _companyService = companyService;
+            _signInManager = signInManager;
+            _accountService = accountService;
+        }
 
-		[HttpPost]
+        [HttpPost]
         [Route("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (result.Succeeded)
+            try
             {
-				var user = await _userManager.FindByEmailAsync(model.Email);
-                return Ok( new {
-					Id = user.Id,
-					FullName = user.FullName,
-					CompanyId = user.CompanyId,
-					ApiToken = await CreateTokenAsync(user)
-				});
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    return Ok(new
+                    {
+                        Id = user.Id,
+                        FullName = user.FullName,
+                        CompanyId = user.CompanyId,
+                        ApiToken = await CreateTokenAsync(user)
+                    });
+                }
+
+                return StatusCode(400, "Invalid email or password");
             }
-			
-			return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
     	[HttpPost]
@@ -62,33 +76,43 @@ namespace ExpenseManager.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var company = new Company() { Name = model.CompanyName };
-            var createdCompany = await _companyService.CreateAsync(company);
-
-            var user = new ApplicationUser()  
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
             {
-                FullName = model.FullName,
-                Email = model.Email,
-				UserName = model.Email,
-				PhoneNumber = model.PhoneNumber,
-                CompanyId = createdCompany.Id,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
+                var company = new Company() { Name = model.CompanyName };
+                var createdCompany = await _companyService.CreateAsync(company);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+                var user = new ApplicationUser()
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    UserName = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    CompanyId = createdCompany.Id,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
 
-            if (result.Succeeded) {
-				await _signInManager.SignInAsync(user, true);
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-                return Ok( new {
-					Id = user.Id,
-					FullName = user.FullName,
-					CompanyId = user.CompanyId,
-					ApiToken = await CreateTokenAsync(user)
-				});
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, true);
+
+                    return Ok(new
+                    {
+                        Id = user.Id,
+                        FullName = user.FullName,
+                        CompanyId = user.CompanyId,
+                        ApiToken = await CreateTokenAsync(user)
+                    });
+                }
+                return StatusCode(500, "User registration fail!");
             }
-
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "User registration fail!");
+            }
         }
 
         [HttpPost("logout")]
@@ -159,6 +183,28 @@ namespace ExpenseManager.Web.Controllers
             var loggedInUserId = User.FindFirstValue(ClaimTypes.PrimarySid);
             var loggedInUser = await _userManager.FindByIdAsync(loggedInUserId);
             return loggedInUser;
+        }
+
+        // send invitation to user to join company by email
+        [HttpPost]
+        [Route("send-invitation")]
+        public async Task<IActionResult> SendInvitation(string email)
+        {
+            if (!ModelState.IsValid)
+                return StatusCode(400, "Email field is not valid");
+
+            if (await _accountService.IsMemberAlready(email))
+                return StatusCode(400, "Member already exist");
+
+            try
+            {
+                await _accountService.SendInvitation(email);
+                return Ok("Invitation successfully sent");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

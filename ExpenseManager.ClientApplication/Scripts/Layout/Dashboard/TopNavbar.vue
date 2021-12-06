@@ -15,7 +15,7 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link"><span>Hi <b>{{ vmFullName }}</b></span></a>
+            <a class="nav-link" v-if="!!vmFullName"><span>Hi <b>{{ vmFullName }}</b></span></a>
           </li>
         </ul>
       </div>
@@ -39,7 +39,8 @@ export default {
     };
   },
   mounted() {
-    this.vmFullName = ApplicationContextService.getContext().user.fullName;
+    let context = ApplicationContextService.getContext();
+    this.vmFullName = context.user.fullName;
   },
   methods: {
     capitalizeFirstLetter(string) {

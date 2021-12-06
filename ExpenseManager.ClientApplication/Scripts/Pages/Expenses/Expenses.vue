@@ -1,20 +1,24 @@
 <template>
   <div class="expense-wrapper">
     <vue-confirm-dialog></vue-confirm-dialog>
-    <ExpenseModal 
-      @close="hideDialog" 
-      @onCreateExpense="onCreateExpense"
-      @onUpdateExpense="onUpdateExpense"
-      :options="vmCategoryTree"
-      :expense="vmExpense"
-      :mode="vmMode"
-      v-if="dialogIsVisible">
-      <h3 slot="heading">Create Expense</h3>
-      <button class="btn btn-warning mr-1" @click="hideDialog">Close</button>
-    </ExpenseModal>
+    <keep-alive>
+        <ExpenseModal 
+            @close="hideDialog" 
+            @onCreateExpense="onCreateExpense"
+            @onUpdateExpense="onUpdateExpense"
+            :options="vmCategoryTree"
+            :expense="vmExpense"
+            :mode="vmMode"
+            v-if="dialogIsVisible"
+        >
+            <h3 slot="heading">Create Expense</h3>
+            <button class="btn btn-warning mr-1" @click="hideDialog">Close</button>
+        </ExpenseModal>
+    </keep-alive>
     <div class="row">
       <div class="col-12">
-        <button class="btn btn-outline-primary" @click="showDialog('create')">Create Expense</button>
+        <button class="btn btn-primary" @click="showDialog('create')">Create single expense</button>
+        <router-link class="btn btn-outline-primary" :to="{ name: 'bulk-expense' }">Bulk expense entry</router-link>
       </div>
     </div>
 
@@ -27,54 +31,112 @@
       </div>
     </div>
 
-		<div class="row">
-			<div class="col-6">
-				<h3>Expense history</h3>
-			</div>
-			<div class="col-6">
-        <Treeselect class="float-right" :style="{ width: '50%'}" v-model="vmCategoryId" :options="vmCategoryTree"></Treeselect>
-			</div>
-		</div>
-
     <div class="row">
-      <div class="col-12">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" class="font-weight-bold">Id</th>
-              <th scope="col" class="font-weight-bold">Title</th>
-              <th scope="col" class="font-weight-bold">Category</th>
-              <th scope="col" class="font-weight-bold">Amount</th>
-              <th scope="col" class="font-weight-bold">Author</th>
-              <th scope="col" class="font-weight-bold">Date</th>
-              <th scope="col" class="font-weight-bold">Payment Mode</th>
-              <th scope="col" class="font-weight-bold">Payment Reference</th>
-              <th scope="col" class="font-weight-bold">Expense Reference</th>
-              <th scope="col" class="font-weight-bold">Description</th>
-              <th scope="col" class="font-weight-bold">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="expense in vmExpenses" :key="expense.id">
-              <th scope="row">{{ expense.uniqueCode }}</th>
-              <td>{{ expense.title }}</td>
-              <td>{{ expense.categoryLabel }}</td>
-              <td>{{ expense.amount }}</td>
-              <td>{{ expense.author }}</td>
-              <td>{{ expense.time }}</td>
-              <td>{{ expense.paymentMode }}</td>
-              <td>{{ expense.paymentReference }}</td>
-              <td>{{ expense.expenseReferenceId }}</td>
-              <td>{{ expense.description }}</td>
-              <td>
-                <button @click="onEditExpense(expense.id)" class="btn btn-warning btn-sm mr-1">Edit</button>
-                <button @click="onDeleteExpense(expense.id)" class="btn btn-danger btn-sm">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="col-6">
+            <h3>Expense history</h3>
+        </div>
+        <div class="col-6">
+            <Treeselect class="float-right" :style="{ width: '50%'}" v-model="vmCategoryId" :options="vmCategoryTree"></Treeselect>
+        </div>
     </div>
+
+    <div class="row expense-table-outer">
+        <div class="col-12 expense-table-col">
+            <div class="table-wrapper table-responsive">
+                <table class="table table-striped table-bordered" id="expense-history">
+                    <thead>
+                        <tr>
+                            <!-- <th class="first-fixed-col" scope="col">Id</th> -->
+                            <!-- <th scope="col">Title</th> -->
+                            <th scope="col">Serial</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Paid Through</th>
+                            <th scope="col">Payment Reference</th>
+                            <th scope="col">Expense Reference</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(expense, index) in vmExpenses" :key="expense.id">
+                            <!-- <td class="first-fixed-col" scope="row">
+                                <div class="data-expense-uniqueId">
+                                    {{ expense.uniqueCode }}
+                                </div>
+                            </td> -->
+                            <!-- <td>
+                                <div class="data-expense">
+                                    {{ expense.title }}
+                                </div>
+                            </td> -->
+                            <td>
+                               {{index+1}}
+                            </td>
+                            <td>
+                                <div class="data-expense-category">
+                                    {{ expense.CategoryLabel }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense-amount">
+                                    {{ expense.Amount }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense">
+                                    {{ expense.Author }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense-date">
+                                    {{ expense.Time }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense-payOption">
+                                    {{ expense.PaymentMode }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense">
+                                    {{ expense.PaymentReference }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense">
+                                    {{ expense.ExpenseReferenceId }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense">
+                                    {{ expense.Description }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="data-expense-actions">
+                                    <button @click="onEditExpense(expense.Id)" class="btn btn-warning btn-sm mr-1">
+                                        <i class="ti-marker-alt"></i>
+                                    </button>
+                                    <button @click="onDeleteExpense(expense.Id)" class="btn btn-danger btn-sm">
+                                        <i class="ti-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <Pagination 
+        label="expenses" 
+        :value="vmPaginationModel"
+        @pageChanged="onPageChanged"
+        @pageSizeChanged="onPageSizeChanged"
+    ></Pagination>
   </div>
 </template>
 
@@ -89,12 +151,15 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 import ApplicationContextService from "@scripts/Services/ApplicationContextService";
 import ExpenseService from "@scripts/Services/ExpenseService";
 import CategoryService from "@scripts/Services/CategoryService";
+import Pagination from "@scripts/components/Pagination.vue";
+import PaginationModel from "@scripts/Utilities/Pagination"; 
 
 export default {
   components: {
     Card,
     ExpenseModal,
-    Treeselect
+    Treeselect,
+    Pagination
   },
   data() {
     return {
@@ -104,30 +169,37 @@ export default {
       searchText: '',
       dialogIsVisible: false,
       vmCategoryTree: [],
-      vmPagination: { pageIndex: 1, pageSize: 10 },
       vmCategoryId: 0,
       vmTotalExpense: 0,
-      companyId: null
+      companyId: null,
+      vmPaginationModel: new PaginationModel(),
     };
   },
   mounted() {
     this.companyId = ApplicationContextService.getContext().company.id;
-    this.loadExpenses();
     this.loadCategoryTree();
+    this.loadExpenses();
   },
   methods: {
     loadExpenses() {
-      let categoryId = this.vmCategoryId == null ? 0 : this.vmCategoryId;
-      ExpenseService.getAllExpense(this.companyId, categoryId, this.vmPagination)
-        .then(response => {
-          let totalExpense = 0;
-          response.forEach(e => {
-            totalExpense += e.amount;
-            e.amount = Utility.formatMoney(e.amount);
-          });
-          this.vmExpenses = response;
-          this.vmTotalExpense = Utility.formatMoney(totalExpense);
+        let categoryId = this.vmCategoryId == null ? 0 : this.vmCategoryId;
+        Utility.prepareCategories(this.vmCategoryTree, [categoryId]).then(catIdList => {
+            let catIds = catIdList.join(',');
+
+            ExpenseService.getAllExpense(this.companyId, categoryId, catIds, this.vmPaginationModel)
+            .then(response => {
+                console.log('new-res: ', response);
+                let totalExpense = 0;
+                response.items.forEach(e => {
+                    totalExpense += e.Amount;
+                    e.Amount = Utility.formatMoney(e.Amount);
+                });
+                this.vmExpenses = response.items;
+				this.vmPaginationModel = response.pagination;
+                this.vmTotalExpense = Utility.formatMoney(totalExpense);
+            });
         });
+
     },
     loadCategoryTree() {
       CategoryService.getAllCategories(this.companyId)
@@ -188,6 +260,16 @@ export default {
       this.dialogIsVisible = false;
       this.vmExpense = new Expense();
     },
+    onPageChanged(pageIndex) {
+        //this.vmPagination.pageIndex = pageIndex;
+        this.loadExpenses();
+        console.log('page-changed: ', this.vmPaginationModel);
+    },
+    onPageSizeChanged(pageSize) {
+        //this.vmPagination.pageSize = pageSize;
+        this.loadExpenses();
+        console.log('page-size-changed: ', this.vmPaginationModel);
+    },
   },
   watch: {
     vmCategoryId() {
@@ -196,7 +278,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseManager.Web
+namespace ExpenseManager.Models
 {
     public class Program
     {

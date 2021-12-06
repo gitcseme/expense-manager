@@ -56,17 +56,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="expense in reportData" :key="expense.id">
-                                <th scope="row">{{ expense.uniqueCode }}</th>
-                                <td>{{ expense.title }}</td>
-                                <td>{{ expense.categoryLabel }}</td>
-                                <td>{{ expense.amount }}</td>
-                                <td>{{ expense.author }}</td>
-                                <td>{{ expense.time }}</td>
-                                <td>{{ expense.paymentMode }}</td>
-                                <td>{{ expense.paymentReference }}</td>
-                                <td>{{ expense.expenseReferenceId }}</td>
-                                <td>{{ expense.description }}</td>
+                            <tr v-for="expense in reportData" :key="expense.Id">
+                                <th scope="row">{{ expense.UniqueCode }}</th>
+                                <td>{{ expense.Title }}</td>
+                                <td>{{ expense.CategoryLabel }}</td>
+                                <td>{{ expense.Amount }}</td>
+                                <td>{{ expense.Author }}</td>
+                                <td>{{ expense.Time }}</td>
+                                <td>{{ expense.PaymentMode }}</td>
+                                <td>{{ expense.PaymentReference }}</td>
+                                <td>{{ expense.ExpenseReferenceId }}</td>
+                                <td>{{ expense.Description }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -157,7 +157,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

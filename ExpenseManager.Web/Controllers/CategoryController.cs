@@ -1,6 +1,5 @@
-using ExpenseManager.Web.Authentication;
-using ExpenseManager.Web.DTOs.Requests;
-using ExpenseManager.Web.DTOs.Responses;
+using ExpenseManager.Models.DTOs.Requests;
+using ExpenseManager.Models.DTOs.Responses;
 using ExpenseManager.Models.Entities;
 using ExpenseManager.Models.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +11,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ExpenseManager.Web.Controllers
+namespace ExpenseManager.Models.Controllers
 {
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     [ApiController]
     public class CategoryController : ControllerBase

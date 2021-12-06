@@ -12,6 +12,5 @@ namespace ExpenseManager.Models.UnitOfWorks
     public interface ICategoryUnitOfWork : IUnitOfWorkBase
     {
         ICategoryRepository CategoryRepository { get; }
-        IExpenseRepository ExpenseRepository { get; }
     }
 }

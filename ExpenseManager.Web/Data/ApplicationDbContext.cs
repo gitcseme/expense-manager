@@ -1,11 +1,8 @@
-﻿using ExpenseManager.Web.Authentication;
+﻿using ExpenseManager.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ExpenseManager.Web.Data
+namespace ExpenseManager.Models.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

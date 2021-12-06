@@ -7,6 +7,10 @@
           </div>
         </div>
         <div class="col-md-6 right-side">
+          <ServerError 
+              v-if="serverError"
+              :message="serverError">
+          </ServerError>
           <div class="card registration-form">
             <form @submit.prevent="onSubmit">
               <h3>Registration Form</h3>
@@ -49,60 +53,44 @@ import AccountAPI from "@scripts/API/AccountAPI";
 import ApplicationContextService from "@scripts/Services/ApplicationContextService";
 
 export default {
-  data() {
-    return {
-      vmRegisterModel: new RegisterModel(),
-      emailAlreadyUsed: false,
-    };
-  },
-  methods: {
-    onSubmit() {
-      console.log(this.vmRegisterModel);
-      AccountAPI.emailExists(this.vmRegisterModel.email)
-        .then(response => {
-          if (response == false) {
-            AccountAPI.register(this.vmRegisterModel).then(() => {
-              ApplicationContextService.setup().then(() => {
-                this.$router.push("/");
-              })
-            })
-          }
-          else {
-            this.emailAlreadyUsed = response;
-          }
-        });
+    data() {
+        return {
+            vmRegisterModel: new RegisterModel(),
+            emailAlreadyUsed: false,
+            serverError:""
+        };
     },
-    Logout() {
-      AccountAPI.logout()
-        .then(() => {
-          ApplicationContextService.setAuthStatus(false);
-          let localtion = window.location.origin + "#/login";
-          window.location = localtion;
-        })
-        .catch(error => {
-          console.log('logout: ', error);
-        });
-    }
-  }
+    methods: {
+        onSubmit() {
+            console.log(this.vmRegisterModel);
+            AccountAPI.emailExists(this.vmRegisterModel.email)
+                .then(response => {
+                if (response == false) {
+                    AccountAPI.register(this.vmRegisterModel).then(() => {
+                        ApplicationContextService.setup().then(() => {
+                            this.$router.push("/");
+                        });
+                    })
+                        .catch((error) => {
+                        this.serverError = error;
+                    });
+                }
+                else {
+                    this.emailAlreadyUsed = response;
+                }
+            });
+        },
+        Logout() {
+            AccountAPI.logout()
+                .then(() => {
+                ApplicationContextService.setAuthStatus(false);
+                let localtion = window.location.origin + "#/login";
+                window.location = localtion;
+            })
+                .catch(error => {
+                console.log("logout: ", error);
+            });
+        }
+    },
 }
 </script>
-
-<style>
-  /* body {
-    background-color: cornflowerblue !important;
-  }
-  .register-wrapper {
-    padding-top: 10%;
-  }
-  .registration-form {
-    padding: 10px;
-    background-color: darkslateblue !important;
-  }
-  .enkaizen-bg {
-    text-align: center;
-  }
-  .enkaizen-bg img {
-    height: 100%;
-    width: 100%;
-  } */
-</style>

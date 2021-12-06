@@ -1,11 +1,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using ExpenseManager.Models;
+using ExpenseManager.Models.Configurations;
 using ExpenseManager.Models.Contexts;
 using ExpenseManager.Models.Seeds;
-using ExpenseManager.Web.Authentication;
-using ExpenseManager.Web.Data;
-using ExpenseManager.Web.Seeds;
+using ExpenseManager.Models.Services;
+using ExpenseManager.Models.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-namespace ExpenseManager.Web
+namespace ExpenseManager.Models
 {
     public class Startup
     {
@@ -124,6 +123,8 @@ namespace ExpenseManager.Web
                 });
             });
 
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddTransient<IEmailSender, SendGridEmailSender>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

@@ -1,0 +1,25 @@
+﻿@model bool
+
+@{
+    ViewData["Title"] = "EmailConfirm";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="content-section">
+            @if (Model)
+            {
+                <p class="section-title">
+                    Awesome! <br />Your account has been setup
+                </p>
+                <a class="btn-cellect" href="@ViewBag.REDIRECT_LINK">Go to login page</a>
+                <p>Use the <span style="color: blueviolet">password</span>  sent to your email for login</p>
+            }
+            else
+            {
+                <p class="section-title">Sorry your email verification link is invalid.</p>
+                <p>Please try again</p>
+            }
+        </div>
+    </div>
+</div>

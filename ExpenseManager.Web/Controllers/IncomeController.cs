@@ -1,6 +1,6 @@
-﻿using ExpenseManager.Web.Authentication;
-using ExpenseManager.Web.DTOs.Requests;
-using ExpenseManager.Web.DTOs.Responses;
+﻿using ExpenseManager.Models.Authentication;
+using ExpenseManager.Models.DTOs.Requests;
+using ExpenseManager.Models.DTOs.Responses;
 using ExpenseManager.Models.Entities;
 using ExpenseManager.Models.Services;
 using ExpenseManager.Models.Utilities;
@@ -11,8 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExpenseManager.Models;
+using Newtonsoft.Json;
 
-namespace ExpenseManager.Web.Controllers
+namespace ExpenseManager.Models.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
@@ -20,34 +22,24 @@ namespace ExpenseManager.Web.Controllers
     public class IncomeController : ControllerBase
     {
         private IIncomeService _incomeService;
-        private ICategoryService _categoryService;
+        private IExpenseService _expenseService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public IncomeController(IIncomeService incomeService, ICategoryService categoryService, UserManager<ApplicationUser> userManager)
+        public IncomeController(IIncomeService incomeService, 
+            UserManager<ApplicationUser> userManager, 
+            IExpenseService expenseService)
         {
             _incomeService = incomeService;
-            _categoryService = categoryService;
             _userManager = userManager;
+            _expenseService = expenseService;
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll(int companyId, int pageIndex = 1, int pageSize = 10)
         {
-            var incomeList = await _incomeService.GetPaginatedIncomeAsync(companyId, pageIndex, pageSize);
-            var response = new List<IncomeResponse>();
-            foreach (var income in incomeList)
-            {
-                response.Add(new IncomeResponse()
-                {
-                    Id = income.Id,
-                    Amount = income.Amount,
-                    Author = income.Author,
-                    Time = GeneralUtilityMethods.GetJSDate(income.Time),
-                    Comment = income.Comment
-                });
-            }
+            var pagedIncomes = await _incomeService.GetPaginatedIncomeAsync(companyId, pageIndex, pageSize);
 
-            return Ok(response);
+            return Ok(JsonConvert.SerializeObject(pagedIncomes, Formatting.Indented));
         }
 
         [HttpPost("create")]
@@ -105,7 +97,7 @@ namespace ExpenseManager.Web.Controllers
         public async Task<double> GetBalance(int companyId)
         {
             var totalIncome = await _incomeService.GetTotalIncomeAsync(companyId);
-            var totalExpense = await _categoryService.GetTotalExpenseAsync(companyId);
+            var totalExpense = await _expenseService.GetTotalExpenseAsync(companyId);
             var balance = totalIncome - totalExpense;
             return balance;
         }

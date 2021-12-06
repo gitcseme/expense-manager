@@ -2,9 +2,10 @@
   <div class="container-fluid">
     <div class="row">
       <CategoryModal
+        v-if="dialogIsVisible"
         @close="hideDialog"
         @onCreateCategory="onCreateCategory"
-        v-if="dialogIsVisible">
+        >
         <h3 slot="heading">Create Category</h3>
         <button class="btn btn-warning" @click="hideDialog">Close</button>
       </CategoryModal>

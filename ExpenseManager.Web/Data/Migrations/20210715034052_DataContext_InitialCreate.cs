@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ExpenseManager.Web.Data.Migrations
+namespace ExpenseManager.Models.Data.Migrations
 {
     public partial class DataContext_InitialCreate : Migration
     {

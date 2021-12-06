@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ExpenseManager.Web.Data.Migrations
+namespace ExpenseManager.Models.Data.Migrations
 {
     public partial class Added_NewProperty_ToUser : Migration
     {

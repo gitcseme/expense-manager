@@ -15,11 +15,8 @@ namespace ExpenseManager.Models.UnitOfWorks
             : base(connectionString, migrationAssemblyName)
         {
             CategoryRepository = new CategoryRepository(_dbContext);
-            ExpenseRepository = new ExpenseRepository(_dbContext);
         }
 
         public ICategoryRepository CategoryRepository { get; private set; }
-
-        public IExpenseRepository ExpenseRepository { get; private set; }
     }
 }

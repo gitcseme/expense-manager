@@ -1,4 +1,4 @@
-namespace ExpenseManager.Web.Authentication.Responses
+namespace ExpenseManager.Models.Authentication.Responses
 {
     public class AuthResponse
     {

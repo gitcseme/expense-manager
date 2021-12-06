@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExpenseManager.Models.DTOs.Responses;
+using ExpenseManager.Models.Models;
 
 namespace ExpenseManager.Models.Services
 {
@@ -52,7 +54,7 @@ namespace ExpenseManager.Models.Services
             return await _incomeUnitOfWork.IncomeRepository.GetAsync(id);
         }
 
-        public async Task<List<Income>> GetPaginatedIncomeAsync(int companyId, int pageIndex, int pageSize)
+        public async Task<PaginatedData<IncomeResponse>> GetPaginatedIncomeAsync(int companyId, int pageIndex, int pageSize)
         {
             return await _incomeUnitOfWork.IncomeRepository.GetPaginatedIncome(companyId, pageIndex, pageSize);
         }

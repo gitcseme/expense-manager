@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExpenseManager.Models.Models;
+using ExpenseManager.Models.Utilities;
+using ExpenseManager.Models.DTOs.Responses;
 
 namespace ExpenseManager.Models.Repositories
 {
@@ -14,15 +17,31 @@ namespace ExpenseManager.Models.Repositories
     {
         public IncomeRepository(DataContext dataContext) : base(dataContext) { }
 
-        public async Task<List<Income>> GetPaginatedIncome(int companyId, int pageIndex, int pageSize)
+        public async Task<PaginatedData<IncomeResponse>> GetPaginatedIncome(int companyId, int pageIndex, int pageSize)
         {
             IQueryable<Income> query = _DbSet;
             query = query
-                    .Where(i => i.CompanyId == companyId)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize);
+                    .Where(i => i.CompanyId == companyId);
 
-            return await query.AsNoTracking().ToListAsync();
+            int totalItems = await query.CountAsync();
+
+            var result = await query
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(i => new IncomeResponse() 
+                    {
+                        Id = i.Id,
+                        Amount = i.Amount,
+                        Author = i.Author,
+                        Time = GeneralUtilityMethods.GetJSDate(i.Time),
+                        Comment = i.Comment
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            var pagedData = new PaginatedData<IncomeResponse>(result, pageIndex, pageSize, totalItems);
+
+            return pagedData;
         }
 
         public async Task<double> GetTotalIncomeAsync(int companyId)

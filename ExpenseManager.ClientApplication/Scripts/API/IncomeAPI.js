@@ -7,7 +7,7 @@ export default {
   getAllIncome(companyId, paging) {
     return new Promise((resolve, reject) => {
       Axios.get(`${INCOME_API_ROOT}/getall?companyId=${companyId}&pageIndex=${paging.pageIndex}&pageSize=${paging.pageSize}`)
-        .then(response => resolve(IncomeMapper.mapIncome(response.data)))
+        .then(response => resolve(IncomeMapper.mapToClient(response.data)))
         .catch(error => reject(error));
     });
   },

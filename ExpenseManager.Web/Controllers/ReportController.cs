@@ -1,8 +1,9 @@
-﻿using ExpenseManager.Models.Services;
+﻿using ExpenseManager.Models;
+using ExpenseManager.Models.Services;
 using ExpenseManager.Models.Utilities;
-using ExpenseManager.Web.Authentication;
-using ExpenseManager.Web.DTOs.Requests;
-using ExpenseManager.Web.DTOs.Responses;
+using ExpenseManager.Models.Authentication;
+using ExpenseManager.Models.DTOs.Requests;
+using ExpenseManager.Models.DTOs.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ExpenseManager.Web.Controllers
+namespace ExpenseManager.Models.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
@@ -26,37 +27,40 @@ namespace ExpenseManager.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private ICategoryService _categoryService { get; }
         private IWebHostEnvironment _hostEnvironment { get;  }
+        private readonly IExpenseService _expenseService;
 
-        public ReportController(UserManager<ApplicationUser> userManager, ICategoryService categoryService, IWebHostEnvironment hostEnvironment)
+        public ReportController(UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment hostEnvironment, 
+            IExpenseService expenseService)
         {
             _userManager = userManager;
-            _categoryService = categoryService;
             _hostEnvironment = hostEnvironment;
+            _expenseService = expenseService;
         }
 
         [HttpPost("expense-report")]
         public async Task<IActionResult> GetExpensesReport(ReportFilterRequest reportFilter)
         {
             var loggedInUser = await GetLoggedInUserAsync();
-            var expenseList = await _categoryService.GetExpenseReportAsync(loggedInUser.CompanyId, reportFilter.Categories, reportFilter.StartDate, reportFilter.EndDate);
+            var expenseList = await _expenseService.GetExpenseReportAsync(loggedInUser.CompanyId, reportFilter.Categories, reportFilter.StartDate, reportFilter.EndDate);
             var response = new List<ExpenseResponse>();
 
             foreach (var expense in expenseList)
             {
                 response.Add(new ExpenseResponse()
                 {
-                    id = expense.Id,
-                    uniqueCode = expense.UniqueCode,
-                    amount = expense.Amount,
-                    author = expense.Author,
-                    categoryId = expense.CategoryId,
-                    categoryLabel = expense.Category.Title,
-                    description = expense.Description,
-                    paymentMode = expense.PaymentMode,
-                    paymentReference = expense.PaymentReference,
-                    expenseReferenceId = expense.ExpenseReferenceId,
-                    time = GeneralUtilityMethods.GetJSDate(expense.Time),
-                    title = expense.Title
+                    Id = expense.Id,
+                    UniqueCode = expense.UniqueCode,
+                    Amount = expense.Amount,
+                    Author = expense.Author,
+                    CategoryId = expense.CategoryId,
+                    CategoryLabel = expense.Category.Title,
+                    Description = expense.Description,
+                    PaymentMode = expense.PaymentMode,
+                    PaymentReference = expense.PaymentReference,
+                    ExpenseReferenceId = expense.ExpenseReferenceId,
+                    Time = GeneralUtilityMethods.GetJSDate(expense.Time),
+                    Title = expense.Title
                 });
             }
 
@@ -67,24 +71,24 @@ namespace ExpenseManager.Web.Controllers
         public async Task<IActionResult> DownloadReport(ReportFilterRequest reportFilter)
         {
             var loggedInUser = await GetLoggedInUserAsync();
-            var expenseList = await _categoryService.GetExpenseReportAsync(loggedInUser.CompanyId, reportFilter.Categories, reportFilter.StartDate, reportFilter.EndDate);
+            var expenseList = await _expenseService.GetExpenseReportAsync(loggedInUser.CompanyId, reportFilter.Categories, reportFilter.StartDate, reportFilter.EndDate);
             var data = new List<ExpenseResponse>();
             foreach (var expense in expenseList)
             {
                 data.Add(new ExpenseResponse()
                 {
-                    id = expense.Id,
-                    uniqueCode = expense.UniqueCode,
-                    amount = expense.Amount,
-                    author = expense.Author,
-                    categoryId = expense.CategoryId,
-                    categoryLabel = expense.Category.Title,
-                    description = expense.Description,
-                    paymentMode = expense.PaymentMode,
-                    paymentReference = expense.PaymentReference,
-                    expenseReferenceId = expense.ExpenseReferenceId,
-                    time = GeneralUtilityMethods.GetJSDate(expense.Time),
-                    title = expense.Title
+                    Id = expense.Id,
+                    UniqueCode = expense.UniqueCode,
+                    Amount = expense.Amount,
+                    Author = expense.Author,
+                    CategoryId = expense.CategoryId,
+                    CategoryLabel = expense.Category.Title,
+                    Description = expense.Description,
+                    PaymentMode = expense.PaymentMode,
+                    PaymentReference = expense.PaymentReference,
+                    ExpenseReferenceId = expense.ExpenseReferenceId,
+                    Time = GeneralUtilityMethods.GetJSDate(expense.Time),
+                    Title = expense.Title
                 });
             }
 

@@ -1,8 +1,8 @@
 import ExpenseAPI from "@scripts/API/ExpenseAPI";
 
 export default {
-    getAllExpense(companyId, categoryId, paging) {
-        return ExpenseAPI.getAllExpense(companyId, categoryId, paging);
+    getAllExpense(companyId, categoryId, catIds, paging) {
+        return ExpenseAPI.getAllExpense(companyId, categoryId, catIds, paging);
     },
     createExpense(model) {
         return ExpenseAPI.createExpense(model);
@@ -12,5 +12,8 @@ export default {
     },
     deleteExpense(id) {
         return ExpenseAPI.deleteExpense(id);
+    },
+    bulkInsert(expenses) {
+        return ExpenseAPI.bulkInsert(expenses);
     }
 }

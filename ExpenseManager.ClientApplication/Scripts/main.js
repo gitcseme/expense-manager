@@ -11,6 +11,7 @@ Vue.use(PaperDashboard);
 import VueConfirmDialog from "vue-confirm-dialog";
 import "./configurations/Axios";
 import "./configurations/VeeValidate";
+import "@scripts/Global/global_registration";
 import ApplicationContextService from "@scripts/Services/ApplicationContextService";
 
 Vue.use(VueConfirmDialog);

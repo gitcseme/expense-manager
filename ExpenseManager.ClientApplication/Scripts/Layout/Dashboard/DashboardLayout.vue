@@ -7,6 +7,7 @@
         <sidebar-link to="/expenses" name="expenses" icon="ti-paint-bucket"/>
         <sidebar-link to="/report" name="report" icon="ti-blackboard"/>
         <sidebar-link to="/balance" name="balance" icon="ti-wallet"/>
+        <sidebar-link to="/invite" name="Invite" icon="ti-user"/>
         
         <!-- <sidebar-link to="/stats" name="User Profile" icon="ti-user"/>
         <sidebar-link to="/table-list" name="Table List" icon="ti-view-list-alt"/>

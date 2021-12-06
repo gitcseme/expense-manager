@@ -1,0 +1,21 @@
+
+div.row.pagination-section {
+    margin-top: 10px;
+    padding-top: 10px;
+    
+    ul.pagination-pages {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+
+        li.active-page a {
+            background-color: coral;
+            font-weight: 800;
+        }
+
+        li:hover {
+            cursor: pointer;
+        }
+    }
+}

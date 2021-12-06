@@ -1,9 +1,9 @@
 ﻿using ExpenseManager.Repositories;
-using ExpenseManager.Web.Data;
+using ExpenseManager.Models.Data;
 using System;
 using System.Threading.Tasks;
 
-namespace ExpenseManager.Web.Seeds
+namespace ExpenseManager.Models.Seeds
 {
     public class ApplicationDbContextSeed : DataSeed
 	{

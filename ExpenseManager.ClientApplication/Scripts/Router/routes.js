@@ -13,10 +13,12 @@ import TableList from "@scripts/pages/TableList.vue";
 import CategoriesLayout from "@scripts/pages/Categories/CategoriesLayout.vue";
 import Category from "@scripts/pages/Categories/Category.vue";
 import Expenses from "@scripts/pages/Expenses/Expenses.vue";
+import BulkExpense from "@scripts/pages/Expenses/BulkExpense.vue";
 import Report from "@scripts/pages/Reports/Report.vue";
 import Balances from "@scripts/pages/Balances/Balances.vue";
 import Login from "@scripts/components/Login.vue";
 import Register from "@scripts/components/Register.vue";
+import InviteUsers from "@scripts/components/InviteUsers.vue";
 
 const routes = [
   {
@@ -57,6 +59,11 @@ const routes = [
         name: 'balance',
         component: Balances
       },
+      { 
+        path: 'invite', 
+        name: 'invite', 
+        component: InviteUsers 
+      },
       {
         path: "stats",
         name: "stats",
@@ -86,9 +93,10 @@ const routes = [
         path: "table-list",
         name: "table-list",
         component: TableList
-      }
+      },
     ]
   },
+  { path: "/bulk-expense", name: "bulk-expense", component: BulkExpense },
   { path: '/login', name: 'login', component: Login },
   { path: '/register', name: 'register', component: Register },
   { path: "*", component: NotFound }

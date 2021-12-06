@@ -64,6 +64,12 @@ namespace ExpenseManager.Models
                 .WithParameter("migrationAssemblyName", _migrationAssemblyName)
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<ExpenseUnitOfWork>()
+                .As<IExpenseUnitOfWork>()
+                .WithParameter("connectionString", _connectionString)
+                .WithParameter("migrationAssemblyName", _migrationAssemblyName)
+                .InstancePerLifetimeScope();
+
             builder.RegisterType<CategoryService>()
                 .As<ICategoryService>()
                 .InstancePerLifetimeScope();
@@ -74,6 +80,14 @@ namespace ExpenseManager.Models
 
             builder.RegisterType<CompanyService>()
                 .As<ICompanyService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<ExpenseService>()
+                .As<IExpenseService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AccountService>()
+                .As<IAccountService>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<DataContextSeed>().SingleInstance();
