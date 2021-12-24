@@ -1,6 +1,11 @@
 # Expense Manager
 An expense manager web application build for managing expenses for a company or organization
 
+## Technologies used to build the application
+1. Asp.Net Core 
+2. Sql server 2019
+3. vuejs 2
+
 <details><summary><b>Instructions to install</b></summary>
 
 1. Install 
